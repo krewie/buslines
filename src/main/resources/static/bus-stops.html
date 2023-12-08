@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bus Stops</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div id="busStopInfo">
+        <p id="loadingText">Loading...</p>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+    const loadingText = $('#loadingText');
+    const busStopInfoDiv = $('#busStopInfo');
+
+    // Fetch bus stop data asynchronously
+    async function fetchBusStops() {
+        try {
+            await fetch('/api/bus-stops');
+            const response = await fetch('/api/bus-stops/top');
+            const data = await response.json();
+
+            return data;
+        } catch (error) {
+            console.error('Error fetching bus stop data:', error);
+            loadingText.html('Error fetching bus stop data');
+        }
+    }
+
+    fetchBusStops().then(busStopsData => {
+
+        let htmlContent = '<h2>Number of stops for each Bus Line:</h2>';
+
+        busStopsData.busLineJourneys.forEach(journey => {
+            htmlContent += `
+                <div class="card mb-3">
+                    <div class="card-header" id="heading-${journey.lineNumber}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link toggle-link" data-toggle="collapse" data-target="#collapse-${journey.lineNumber}">
+                                Line ${journey.lineNumber} - Number of Stops: ${journey.nrOfStops}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapse-${journey.lineNumber}" class="collapse" data-parent="#busStopInfo">
+                        <div class="card-body">
+                            <ul class="list-group">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        busStopInfoDiv.html(htmlContent);
+
+        // Populate each list with data
+        busStopsData.busLineJourneys.forEach(journey => {
+            let listContent = '';
+            journey.busStops.forEach((busStop, index) => {
+                listContent += `<li class="list-group-item">${index + 1} - ${busStop.stopPointName}</li>`;
+            });
+            $(`#collapse-${journey.lineNumber} .list-group`).html(listContent);
+        });
+
+    }).catch(error => {
+        console.error('Error fetching bus stop data:', error);
+        loadingText.html('Error fetching bus stop data');
+    });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

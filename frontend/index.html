@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bus Stops</title>
+  <style>
+    /* Style for the list */
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bus Stops</h1>
+  <h2>Bus Line 631</h2>
+  <ul id="busStops631"></ul>
+
+  <h2>Bus Line 636</h2>
+  <ul id="busStops636"></ul>
+
+  <script>
+/*
+    // Function to create list items for bus stops
+    function createListItems(busLine, stops) {
+      const ul = document.getElementById(`busStops${busLine}`);
+      stops.forEach(stop => {
+        const li = document.createElement('li');
+        li.textContent = `${stop.stopPointName} (Stop Point Number: ${stop.stopPointNumber})`;
+        ul.appendChild(li);
+      });
+    }
+*/
+
+        // Fetch bus stop data asynchronously
+    async function fetchBusStops() {
+      try {
+        // Perform GET request for bus stop data for line 631
+        const response = await fetch('http://127.0.0.1:8082/api/bus-stops/top');
+        const data = await response.json();
+
+        // Display bus stops for bus line 631
+        //createListItems("631", data631);
+      } catch (error) {
+        console.error('Error fetching bus stop data:', error);
+      }
+    }
+
+    fetchBusStops();
+
+  </script>
+</body>
+</html>

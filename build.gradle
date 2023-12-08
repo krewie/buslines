@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.krewie'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.5.6'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0' // For Java 8 date/time support
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+application {
+    // Set the main class for the application
+    mainClassName = 'com.krewie.buslines.BuslinesApplication' // Replace this with your actual Spring Boot main class
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
